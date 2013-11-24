@@ -2,7 +2,7 @@ package maisonintelligente.acteur;
 
 public interface IVolet {
 
-	public int setOuvertureVolet(int pourcentage);
+	public void setOuvertureVolet(int pourcentage);
 	
 	public void addListener(IVoletListener listener);
 	

@@ -41,7 +41,7 @@ public class PresenceStub implements IPresence, Runnable {
 			boolean newEstPresent = Math.random() > 0.5;
 			
 			if(newEstPresent != this.estPresent){
-			
+				this.estPresent = newEstPresent;
 				System.out.println("La presence a changé: présent = " + estPresent);
 			
 				for(int i=0;i<listeners.size();i++){
@@ -50,7 +50,7 @@ public class PresenceStub implements IPresence, Runnable {
 			}
 			
 			try {
-				this.wait((long) Math.floor(Math.random() * 1000 * 60));
+				Thread.sleep((long) Math.floor(Math.random() * 1000 * 60));
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

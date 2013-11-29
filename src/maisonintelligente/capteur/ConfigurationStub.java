@@ -17,7 +17,7 @@ public class ConfigurationStub implements IConfiguration, Runnable {
 	@Override
 	public boolean estVoletOuvertActive() {
 		
-		return estVoletOuvertActive();
+		return modeActif;
 	}
 
 	@Override
@@ -43,7 +43,7 @@ public class ConfigurationStub implements IConfiguration, Runnable {
 			boolean newModeActif = Math.random() > 0.5;
 			
 			if(newModeActif != this.modeActif){
-			
+				this.modeActif = newModeActif;
 				System.out.println("Utilisateur a changé son mode à " + modeActif);
 			
 				for(int i=0;i<listeners.size();i++){
@@ -52,7 +52,7 @@ public class ConfigurationStub implements IConfiguration, Runnable {
 			}
 			
 			try {
-				this.wait((long) Math.floor(Math.random() * 1000 * 60));
+				Thread.sleep((long) Math.floor(Math.random() * 1000 * 10));
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

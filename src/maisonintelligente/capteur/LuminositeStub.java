@@ -14,7 +14,7 @@ public class LuminositeStub implements ILuminosite, Runnable {
 	
 	@Override
 	public int getLuminosite() {
-		return 0;
+		return luminosite;
 	}
 
 	@Override
@@ -40,7 +40,7 @@ public class LuminositeStub implements ILuminosite, Runnable {
 			int newLuminosite = (int) Math.floor((Math.random() * 100));
 			
 			if(newLuminosite != this.luminosite){
-			
+				this.luminosite = newLuminosite;
 				System.out.println("La luminosité a changé : " + luminosite);
 			
 				for(int i=0;i<listeners.size();i++){
@@ -49,7 +49,7 @@ public class LuminositeStub implements ILuminosite, Runnable {
 			}
 			
 			try {
-				this.wait((long) Math.floor(Math.random() * 1000 * 30));
+				Thread.sleep((long) Math.floor(Math.random() * 1000 * 30));
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

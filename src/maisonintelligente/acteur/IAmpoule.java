@@ -11,4 +11,6 @@ public interface IAmpoule {
 	 */
 	public void setLumiere(int pourcentage);
 	
+	public int getLumiere();
+	
 }

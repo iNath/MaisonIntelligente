@@ -3,6 +3,9 @@ package maisonintelligente;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import com.phidgets.event.SensorChangeEvent;
+
+import maisonintelligente.acteur.Ampoule;
 import maisonintelligente.acteur.AmpouleStub;
 import maisonintelligente.acteur.IAmpoule;
 import maisonintelligente.acteur.IVolet;
@@ -16,16 +19,19 @@ import maisonintelligente.capteur.ILuminositeListener;
 import maisonintelligente.capteur.IPresence;
 import maisonintelligente.capteur.IPresenceListener;
 import maisonintelligente.capteur.LuminositeStub;
+import maisonintelligente.capteur.Presence;
 import maisonintelligente.capteur.PresenceStub;
 
 public class Engine implements Runnable {
 	
-	IAmpoule ampouleService = new AmpouleStub();
+	//IAmpoule ampouleService = new AmpouleStub();
+	IAmpoule ampouleService = new Ampoule();
 	IVolet voletService = new VoletStub();
 	
 	IConfiguration configurationService = new ConfigurationStub();
 	ILuminosite luminositeService = new LuminositeStub();
-	IPresence presenceService = new PresenceStub();
+	//IPresence presenceService = new PresenceStub();
+	IPresence presenceService = new Presence();
 	
 	private boolean isBusy = false;
 	private IVoletListener voletListener;

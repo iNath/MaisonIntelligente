@@ -3,7 +3,7 @@ package maisonintelligente.capteur;
 public interface ILuminosite {
 
 	/**
-	 * Retourne la luminosité en pourcentage perçu dans la piece
+	 * Retourne la luminositer en pourcentage percu dans la piece
 	 * 
 	 * @return un pourcentage
 	 */

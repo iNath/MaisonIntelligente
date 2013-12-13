@@ -3,9 +3,9 @@ package maisonintelligente.capteur;
 public interface IConfiguration {
 
 	/**
-	 * Va chercher comment l'utilisateur a configuré son mode volet ouvert ou mode volet fermé
+	 * Va chercher comment l'utilisateur a configurer son mode volet ouvert ou mode volet fermer
 	 * 
-	 * @return l'état de la configuration utilisateur
+	 * @return l'etat de la configuration utilisateur
 	 */
 	public boolean estVoletOuvertActive();
 

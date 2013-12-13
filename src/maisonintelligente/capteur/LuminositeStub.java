@@ -41,7 +41,7 @@ public class LuminositeStub implements ILuminosite, Runnable {
 			
 			if(newLuminosite != this.luminosite){
 				this.luminosite = newLuminosite;
-				System.out.println("La luminosité a changé : " + luminosite);
+				System.out.println("[LuminositeStub] La luminosite a changer : " + luminosite);
 			
 				for(int i=0;i<listeners.size();i++){
 					listeners.get(i).luminositeChanged();

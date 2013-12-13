@@ -10,6 +10,8 @@ import maisonintelligente.acteur.AmpouleStub;
 import maisonintelligente.acteur.IAmpoule;
 import maisonintelligente.acteur.IVolet;
 import maisonintelligente.acteur.IVoletListener;
+import maisonintelligente.acteur.Volet;
+import maisonintelligente.acteur.VoletListener;
 import maisonintelligente.acteur.VoletStub;
 import maisonintelligente.capteur.ConfigurationStub;
 import maisonintelligente.capteur.IConfiguration;
@@ -25,42 +27,55 @@ import maisonintelligente.capteur.PresenceStub;
 public class Engine implements Runnable {
 	
 	//IAmpoule ampouleService = new AmpouleStub();
+	/*Permet de controller la lumiere de la piece*/
 	IAmpoule ampouleService = new Ampoule();
-	IVolet voletService = new VoletStub();
 	
+	/*Permet de controller les volet de la piece*/
+	IVolet voletService = new Volet();
+	
+	/*Permet de configurer le mode de luminosite de la piece(volets, lumiere)*/
 	IConfiguration configurationService = new ConfigurationStub();
+	
+	/*Permet d'avoir la luminosite de la piece*/
 	ILuminosite luminositeService = new LuminositeStub();
+	/*Permet de detecter la presence d'une personne dans la piece*/
 	//IPresence presenceService = new PresenceStub();
 	IPresence presenceService = new Presence();
 	
-	private boolean isBusy = false;
+	/*Permet de savoir qd les vole*/
 	private IVoletListener voletListener;
+	
+	private boolean isBusy = false;
 	
 	public Engine(){
 		
-		voletListener = new IVoletListener() {
-			public void actionStart() { }
-			public void actionEnd() { voletActionEndedHandler(); }
-		};
+		System.out.println("[Engine] start Engine");
+		
+		voletListener = new VoletListener();
 		voletService.addListener(voletListener);
 		
-		doActions();
+		//doActions();
 		
+		/*Ajouter un listener pour savoir si la configuration a changer*/
 		configurationService.addListener(new IConfigurationListener() {
 			public void configurationChanged() {
 				doActions();
 			}
 		});
+		/*Ajouter un listener pour savoir si la luminosite à changer*/
 		luminositeService.addListener(new ILuminositeListener() {
 			public void luminositeChanged() {
 				doActions();
 			}
 		});
+		/*Ajouter un listener pour savoir si la presence de l'utilisateur a changer*/
 		presenceService.addListener(new IPresenceListener() {
 			public void presenceChanged() {
 				doActions();
 			}
 		});
+	
+		System.out.println("[Engine] end Engine");
 	}
 
 	private void voletActionEndedHandler() {
@@ -78,7 +93,7 @@ public class Engine implements Runnable {
 		if(this.isBusy == true){
 			return false;
 		}
-		System.out.println("[Engine] Changement d'Ã©tat commence");
+		System.out.println("[Engine] start do action");
 		
 		
 		this.isBusy = true;
@@ -96,12 +111,14 @@ public class Engine implements Runnable {
 			}
 		}
 		
+		System.out.println("[Engine] end do action");
+		
 		return true;
 	}
 	
 	private void logState() {
 		System.out.println("[ Amp ][ Vol ]|[ Cfg ][ Lum ][ Pst ]");
-		System.out.println("| " + ampouleService.getLumiere() + " |"
+		System.out.println("|  ampouleService.getLumiere() +  |"
 				+ "| " + voletService.getOuvertureVolet() + " |"
 				+ "|| " + configurationService.estVoletOuvertActive() + "|"
 				+ "| " + luminositeService.getLuminosite() + " |"

@@ -13,6 +13,7 @@ import maisonintelligente.acteur.IVoletListener;
 import maisonintelligente.acteur.Volet;
 import maisonintelligente.acteur.VoletListener;
 import maisonintelligente.acteur.VoletStub;
+import maisonintelligente.capteur.Configuration;
 import maisonintelligente.capteur.ConfigurationStub;
 import maisonintelligente.capteur.IConfiguration;
 import maisonintelligente.capteur.IConfigurationListener;
@@ -26,26 +27,24 @@ import maisonintelligente.capteur.PresenceStub;
 
 public class Engine implements Runnable {
 	
-	//IAmpoule ampouleService = new AmpouleStub();
-	/*Permet de controller la lumiere de la piece*/
-	IAmpoule ampouleService = new Ampoule();
+	IAmpoule ampouleService = new AmpouleStub();
+	//IAmpoule ampouleService = new Ampoule();
+	IVolet voletService = new VoletStub();
 	
-	/*Permet de controller les volet de la piece*/
-	IVolet voletService = new Volet();
 	
-	/*Permet de configurer le mode de luminosite de la piece(volets, lumiere)*/
-	IConfiguration configurationService = new ConfigurationStub();
+	//IConfiguration configurationService = new ConfigurationStub();
+	IConfiguration configurationService = new Configuration();
 	
-	/*Permet d'avoir la luminosite de la piece*/
 	ILuminosite luminositeService = new LuminositeStub();
-	/*Permet de detecter la presence d'une personne dans la piece*/
-	//IPresence presenceService = new PresenceStub();
-	IPresence presenceService = new Presence();
-	
-	/*Permet de savoir qd les vole*/
-	private IVoletListener voletListener;
+	IPresence presenceService = new PresenceStub();
+	//IPresence presenceService = new Presence();
 	
 	private boolean isBusy = false;
+	private boolean stateChanged = false;
+	private IVoletListener voletListener;
+	
+	final private int SEUIL_LUMINOSITE = 70;
+
 	
 	public Engine(){
 		
@@ -54,24 +53,26 @@ public class Engine implements Runnable {
 		voletListener = new VoletListener();
 		voletService.addListener(voletListener);
 		
-		//doActions();
-		
+		tryDoingActions();
 		/*Ajouter un listener pour savoir si la configuration a changer*/
 		configurationService.addListener(new IConfigurationListener() {
 			public void configurationChanged() {
-				doActions();
+				stateChanged = true;
+				tryDoingActions();
 			}
 		});
 		/*Ajouter un listener pour savoir si la luminosite � changer*/
 		luminositeService.addListener(new ILuminositeListener() {
 			public void luminositeChanged() {
-				doActions();
+				stateChanged = true;
+				tryDoingActions();
 			}
 		});
 		/*Ajouter un listener pour savoir si la presence de l'utilisateur a changer*/
 		presenceService.addListener(new IPresenceListener() {
 			public void presenceChanged() {
-				doActions();
+				stateChanged = true;
+				tryDoingActions();
 			}
 		});
 	
@@ -79,41 +80,70 @@ public class Engine implements Runnable {
 	}
 
 	private void voletActionEndedHandler() {
-		voletService.removeListener(voletListener);
-		actionEndedHandler();
+		if(luminositeService.getLuminosite() >= SEUIL_LUMINOSITE){
+			voletService.removeListener(voletListener);
+			actionEndedHandler();
+		} else {
+			// Si on est toujours pas bon, on recommence le calcul
+			// A condition qu'on ai pas déjà tout ouvert..
+			if(ampouleService.getLumiere() < 100 && voletService.getOuvertureVolet() < 100){
+				doActions();
+			} else {
+				// Sinon on arrete la
+				actionEndedHandler();
+			}
+		}
 	}
 
 	private void actionEndedHandler() {
 		logState();
 		this.isBusy = false;
-		//if(hasNextAction) doActions();
+		
+		// Si l'etat de la maison a changé on relance les calculs
+		if(stateChanged){
+			tryDoingActions();
+		}
 	}
 
-	private synchronized boolean doActions(){
+	private synchronized boolean tryDoingActions(){
 		if(this.isBusy == true){
 			return false;
 		}
-		System.out.println("[Engine] start do action");
-		
 		
 		this.isBusy = true;
+		
+		doActions();
+		
+		return true;
+	}
+	
+	private void doActions(){
+
+		System.out.println("[Engine] Changement d'état commence");
 		
 		if(!presenceService.estPresent()){
 			ampouleService.setLumiere(0);
 			voletService.setOuvertureVolet(0);
 		} else {
 			if(configurationService.estVoletOuvertActive()){
-				voletService.setOuvertureVolet(100);
-				ampouleService.setLumiere(50);
+				// Si les volets ne sont pas encore ouvert
+				if(voletService.getOuvertureVolet() == 0){
+					voletService.setOuvertureVolet(100);
+					ampouleService.setLumiere(50);
+				} else {
+					// Si les volets sont ouverts
+					
+					// Si la luminosité n'est toujours pas suffisante
+					if(luminositeService.getLuminosite() < SEUIL_LUMINOSITE){
+						// Alors on allume les lumieres a fond
+						ampouleService.setLumiere(100);
+					}
+				}
 			} else {
 				voletService.setOuvertureVolet(0);
 				ampouleService.setLumiere(100);
 			}
 		}
-		
-		System.out.println("[Engine] end do action");
-		
-		return true;
 	}
 	
 	private void logState() {

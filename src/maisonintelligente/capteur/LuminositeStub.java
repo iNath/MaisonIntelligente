@@ -1,6 +1,4 @@
 package maisonintelligente.capteur;
-import static com.googlecode.javacv.cpp.opencv_highgui.cvSaveImage;
-
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -8,8 +6,8 @@ import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
-import com.googlecode.javacv.OpenCVFrameGrabber;
-import com.googlecode.javacv.cpp.opencv_core.IplImage;
+import com.github.sarxos.webcam.Webcam;
+
 
 public class LuminositeStub implements ILuminosite, Runnable {
 	
@@ -30,18 +28,6 @@ public class LuminositeStub implements ILuminosite, Runnable {
 		return Y;
 		}
 	
-	private static void captureFrame() {
-        final OpenCVFrameGrabber grabber = new OpenCVFrameGrabber(0);
-        try {
-            grabber.start();
-            IplImage img = grabber.grab();
-            if (img != null) {
-                cvSaveImage("capture.png", img);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 	
 	public LuminositeStub(){
 		luminosite = 50;
@@ -50,25 +36,18 @@ public class LuminositeStub implements ILuminosite, Runnable {
 	
 	@Override
 	public int getLuminosite()  {
-		captureFrame();
-		BufferedImage img;
-		try {
-			img = ImageIO.read(new File("capture.png"));
-			 int w = img.getWidth();
-		        int h = img.getHeight();
-		        double L=0;
-		        for (int x=0; x<w; x++)
-		        	for (int y=0; y<h; y++)
-		        	{    		
-		        		L = L+ getLuminositePixel(img, x, y);      		
-		        	}
-
-		        luminosite= (int) (((L/(w*h))/255)*100);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-       
+		Webcam hercules = Webcam.getWebcams().get(1);
+	 	hercules.open();	
+	    BufferedImage img =hercules.getImage();
+	    int w = img.getWidth();
+		int h = img.getHeight();
+		double L=0;
+		for (int x=0; x<w; x++)
+			for (int y=0; y<h; y++)
+			{    		
+				L = L+ getLuminositePixel(img, x, y);      		
+			}
+		luminosite= (int) (((L/(w*h))/255)*100);
 		return luminosite;
 	}
 

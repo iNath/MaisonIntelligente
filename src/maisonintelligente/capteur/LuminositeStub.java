@@ -36,7 +36,7 @@ public class LuminositeStub implements ILuminosite, Runnable {
             grabber.start();
             IplImage img = grabber.grab();
             if (img != null) {
-                cvSaveImage("capture.jpg", img);
+                cvSaveImage("capture.png", img);
             }
         } catch (Exception e) {
             e.printStackTrace();

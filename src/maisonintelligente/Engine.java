@@ -21,6 +21,7 @@ import maisonintelligente.capteur.ILuminosite;
 import maisonintelligente.capteur.ILuminositeListener;
 import maisonintelligente.capteur.IPresence;
 import maisonintelligente.capteur.IPresenceListener;
+import maisonintelligente.capteur.Luminosite;
 import maisonintelligente.capteur.LuminositeStub;
 import maisonintelligente.capteur.Presence;
 import maisonintelligente.capteur.PresenceStub;

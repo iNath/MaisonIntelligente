@@ -73,7 +73,7 @@ public class Presence implements IPresence, Runnable{
 			listeners.get(i).presenceChanged();
 		}
 		estPresent = !estPresent();
-		System.out.println("presence changed to "+estPresent);
+		System.out.println("[Presence] presence changed to "+estPresent);
 	}
 
 }

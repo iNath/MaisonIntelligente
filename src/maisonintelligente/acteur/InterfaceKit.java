@@ -14,7 +14,7 @@ public class InterfaceKit {
 	
 	private static InterfaceKit instance = null;
 	
-	private InterfaceKitPhidget ik;
+	private InterfaceKitPhidget ik = null;
 	
 	private InterfaceKit() {
 		super();
@@ -23,7 +23,7 @@ public class InterfaceKit {
 		 try {
 			ik = new InterfaceKitPhidget();
 			ik.openAny();
-			System.out.println("Waiting for attachement");
+			System.out.println("[InterfaceKit] Waiting for attachement");
 			ik.waitForAttachment();
 		} catch (PhidgetException e) {
 			e.printStackTrace();
@@ -32,21 +32,21 @@ public class InterfaceKit {
 		 ik.addAttachListener(new AttachListener() {
 			 
 			 public void attached(AttachEvent ae) {
-				 System.out.println(" *** The interface Kit is attached *** ");
+				 System.out.println("[InterfaceKit] The interface Kit is attached");
 			 }
 		 });
 		 
 		 ik.addDetachListener(new DetachListener() {
 			 
 			 public void detached(DetachEvent ae) {
-				 System.out.println(" *** The interface Kit is dettached *** ");
+				 System.out.println("[InterfaceKit] The interface Kit is dettached");
 			 }
 		 });
 		 
 		 ik.addErrorListener(new ErrorListener() {
 			 
 			 public void error(ErrorEvent ee) {
-				 System.out.println("error event for "+ ee);
+				 System.out.println("[InterfaceKit] error event for "+ ee);
 			 }
 		 });
 		

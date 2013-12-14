@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class VoletStub implements IVolet, Runnable {
 
 	ArrayList<IVoletListener> listeners = new ArrayList<IVoletListener>();
-	private int pourcentage = 0;
+	private double pourcentage = 0;
 	
 	
 	public VoletStub() {
@@ -18,7 +18,7 @@ public class VoletStub implements IVolet, Runnable {
 		this.pourcentage = pourcentage;
 	}
 
-	public int getOuvertureVolet() {
+	public double getOuvertureVolet() {
 		return this.pourcentage;
 	}
 

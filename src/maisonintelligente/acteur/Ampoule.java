@@ -1,6 +1,7 @@
 package maisonintelligente.acteur;
 
 import com.phidgets.InterfaceKitPhidget;
+
 import com.phidgets.PhidgetException;
 
 public class Ampoule implements IAmpoule {
@@ -11,7 +12,7 @@ public class Ampoule implements IAmpoule {
 	public Ampoule() {
 		ik = InterfaceKit.getInstance().getIk();
 		try {
-			pourcentage = calculateLumière();
+			pourcentage = calculateLumierre();
 		} catch (PhidgetException e) {
 			e.printStackTrace();
 		} 
@@ -19,7 +20,7 @@ public class Ampoule implements IAmpoule {
 
 	@Override
 	public void setLumiere(int pourcentage) {
-		System.out.println("\nsetting luminosité : "+pourcentage+"\n");
+		System.out.println("\nsetting luminosite : "+pourcentage+"\n");
 		try {
 			switch(pourcentage) {
 				case(0) :   ik.setOutputState(0, false);
@@ -43,7 +44,7 @@ public class Ampoule implements IAmpoule {
 		return pourcentage;
 	}
 	
-	private int calculateLumière() throws PhidgetException {
+	private int calculateLumierre() throws PhidgetException {
 		if(ik.getOutputState(0) && ik.getOutputState(7)) {
 			return 100;
 		}

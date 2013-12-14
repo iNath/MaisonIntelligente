@@ -3,7 +3,7 @@ package maisonintelligente.capteur;
 public interface IPresence {
 
 	/**
-	 * Renvoie true ou false selon si la présence a été detecté ou pas 
+	 * Renvoie true ou false selon si la presence a ete detecter ou pas 
 	 * 
 	 * @return boolean
 	 */

@@ -10,6 +10,8 @@ import maisonintelligente.acteur.AmpouleStub;
 import maisonintelligente.acteur.IAmpoule;
 import maisonintelligente.acteur.IVolet;
 import maisonintelligente.acteur.IVoletListener;
+import maisonintelligente.acteur.Volet;
+import maisonintelligente.acteur.VoletListener;
 import maisonintelligente.acteur.VoletStub;
 import maisonintelligente.capteur.Configuration;
 import maisonintelligente.capteur.ConfigurationStub;
@@ -42,35 +44,39 @@ public class Engine implements Runnable {
 	private IVoletListener voletListener;
 	
 	final private int SEUIL_LUMINOSITE = 70;
+
 	
 	public Engine(){
 		
-		voletListener = new IVoletListener() {
-			public void actionStart() { }
-			public void actionEnd() { voletActionEndedHandler(); }
-		};
+		System.out.println("[Engine] start Engine");
+		
+		voletListener = new VoletListener();
 		voletService.addListener(voletListener);
 		
 		tryDoingActions();
-		
+		/*Ajouter un listener pour savoir si la configuration a changer*/
 		configurationService.addListener(new IConfigurationListener() {
 			public void configurationChanged() {
 				stateChanged = true;
 				tryDoingActions();
 			}
 		});
+		/*Ajouter un listener pour savoir si la luminosite à changer*/
 		luminositeService.addListener(new ILuminositeListener() {
 			public void luminositeChanged() {
 				stateChanged = true;
 				tryDoingActions();
 			}
 		});
+		/*Ajouter un listener pour savoir si la presence de l'utilisateur a changer*/
 		presenceService.addListener(new IPresenceListener() {
 			public void presenceChanged() {
 				stateChanged = true;
 				tryDoingActions();
 			}
 		});
+	
+		System.out.println("[Engine] end Engine");
 	}
 
 	private void voletActionEndedHandler() {
@@ -142,7 +148,7 @@ public class Engine implements Runnable {
 	
 	private void logState() {
 		System.out.println("[ Amp ][ Vol ]|[ Cfg ][ Lum ][ Pst ]");
-		System.out.println("| " + ampouleService.getLumiere() + " |"
+		System.out.println("|  ampouleService.getLumiere() +  |"
 				+ "| " + voletService.getOuvertureVolet() + " |"
 				+ "|| " + configurationService.estVoletOuvertActive() + "|"
 				+ "| " + luminositeService.getLuminosite() + " |"

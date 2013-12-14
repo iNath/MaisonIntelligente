@@ -44,7 +44,7 @@ public class ConfigurationStub implements IConfiguration, Runnable {
 			
 			if(newModeActif != this.modeActif){
 				this.modeActif = newModeActif;
-				System.out.println("Utilisateur a changé son mode à " + modeActif);
+				System.out.println("[ConfigurationStub] Utilisateur a changer son mode  " + modeActif);
 			
 				for(int i=0;i<listeners.size();i++){
 					listeners.get(i).configurationChanged();

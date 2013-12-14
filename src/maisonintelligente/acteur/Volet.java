@@ -5,10 +5,11 @@ import java.util.ArrayList;
 import com.phidgets.PhidgetException;
 import com.phidgets.ServoPhidget;
 
-public class Volet implements IVolet{
+public class Volet implements IVolet, Runnable{
 	
 	ArrayList<IVoletListener> listeners = new ArrayList<IVoletListener>();
 	private double pourcentage;
+	private double new_pourcenyage;
 	ServoPhidget servo;
 	
 	public Volet(){
@@ -33,19 +34,24 @@ public class Volet implements IVolet{
 	
 	@Override
 	public void setOuvertureVolet(int newp) {		
-		int i;
-		double actp ;
-	
-		actp = pourcentage;
-			
+		
+		new_pourcenyage = newp;
+		new Thread(this).start();
+}
+
+	public void run ()
+	{
+		
+		int i;	
+					
 		for( i = 0; i<listeners.size();i++){
 			listeners.get(i).actionStart();
 		}
 		
-		if(actp > newp)
+		if(pourcentage > new_pourcenyage)
 		{
 			System.out.println("[Volet] Closing shutters ...");
-			for(i=(int)actp; i>= newp; i--)
+			for(i=(int)pourcentage; i>= new_pourcenyage; i--)
 			{
 				try {
 					servo.setPosition(0, i);
@@ -62,7 +68,7 @@ public class Volet implements IVolet{
 		else
 		{
 			System.out.println("[Volet] Opening shutters ...");
-			for(i=(int)actp; i<= newp; i++)
+			for(i=(int)pourcentage; i<= new_pourcenyage; i++)
 			{
 				try {
 					servo.setPosition(0, i);
@@ -80,9 +86,10 @@ public class Volet implements IVolet{
 		for( i = 0; i<listeners.size();i++){
 			listeners.get(i).actionEnd();
 		}
-		pourcentage = newp;
-}
-
+		pourcentage = new_pourcenyage;
+	}
+	
+	
 	@Override
 	public double getOuvertureVolet() {		
 		return pourcentage;

@@ -50,7 +50,10 @@ public class Engine implements Runnable {
 		
 		System.out.println("[Engine] start Engine");
 		
-		voletListener = new VoletListener();
+		voletListener = new IVoletListener() {
+			public void actionStart() { }
+			public void actionEnd() { voletActionEndedHandler(); }
+		};
 		voletService.addListener(voletListener);
 		
 		tryDoingActions();
@@ -61,7 +64,7 @@ public class Engine implements Runnable {
 				tryDoingActions();
 			}
 		});
-		/*Ajouter un listener pour savoir si la luminosite à changer*/
+		/*Ajouter un listener pour savoir si la luminosite ï¿½ changer*/
 		luminositeService.addListener(new ILuminositeListener() {
 			public void luminositeChanged() {
 				stateChanged = true;

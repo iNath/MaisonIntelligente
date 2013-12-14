@@ -52,7 +52,7 @@ public class Configuration implements IConfiguration, Runnable {
 			// On va lire le fichier
 			URL url;
 			try {
-				url = new URL("http://localhost/maisonintelligente/get.php");
+				url = new URL("http://nath973.no-ip.org/maisonintelligente/get.php");
 			
 				InputStream is = url.openStream();
 				JsonReader rdr = Json.createReader(is);

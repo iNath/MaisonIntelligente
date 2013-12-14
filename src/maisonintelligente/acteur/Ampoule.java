@@ -20,6 +20,7 @@ public class Ampoule implements IAmpoule {
 
 	@Override
 	public void setLumiere(int pourcentage) {
+		this.pourcentage = pourcentage;
 		System.out.println("\nsetting luminosite : "+pourcentage+"\n");
 		try {
 			switch(pourcentage) {

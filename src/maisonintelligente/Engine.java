@@ -28,23 +28,25 @@ import maisonintelligente.capteur.PresenceStub;
 
 public class Engine implements Runnable {
 	
-	IAmpoule ampouleService = new AmpouleStub();
-	//IAmpoule ampouleService = new Ampoule();
+	//IAmpoule ampouleService = new AmpouleStub();
+	IAmpoule ampouleService = new Ampoule();
 	IVolet voletService = new VoletStub();
+	//IVolet voletService = new Volet();
 	
 	
 	//IConfiguration configurationService = new ConfigurationStub();
 	IConfiguration configurationService = new Configuration();
-	
-	ILuminosite luminositeService = new LuminositeStub();
-	IPresence presenceService = new PresenceStub();
-	//IPresence presenceService = new Presence();
+
+	//ILuminosite luminositeService = new LuminositeStub();
+	ILuminosite luminositeService = new Luminosite();
+	//IPresence presenceService = new PresenceStub();
+	IPresence presenceService = new Presence();
 	
 	private boolean isBusy = false;
 	private boolean stateChanged = false;
 	private IVoletListener voletListener;
 	
-	final private int SEUIL_LUMINOSITE = 70;
+	final private int SEUIL_LUMINOSITE = 40;
 
 	
 	public Engine(){
@@ -84,6 +86,9 @@ public class Engine implements Runnable {
 	}
 
 	private void voletActionEndedHandler() {
+		actionEndedHandler();
+		return; // TODO
+		/*
 		if(luminositeService.getLuminosite() >= SEUIL_LUMINOSITE){
 			voletService.removeListener(voletListener);
 			actionEndedHandler();
@@ -97,6 +102,7 @@ public class Engine implements Runnable {
 				actionEndedHandler();
 			}
 		}
+		*/
 	}
 
 	private void actionEndedHandler() {
@@ -113,7 +119,7 @@ public class Engine implements Runnable {
 		if(this.isBusy == true){
 			return false;
 		}
-		
+		stateChanged = false;
 		this.isBusy = true;
 		
 		doActions();
@@ -141,7 +147,14 @@ public class Engine implements Runnable {
 					if(luminositeService.getLuminosite() < SEUIL_LUMINOSITE){
 						// Alors on allume les lumieres a fond
 						ampouleService.setLumiere(100);
+					} else if(luminositeService.getLuminosite() < SEUIL_LUMINOSITE+10) {
+						// Sinon on allume les lumieres en medium
+						ampouleService.setLumiere(50);
+					} else {
+						// Sinon on allume les lumieres au minimum
+						ampouleService.setLumiere(0);
 					}
+					actionEndedHandler();
 				}
 			} else {
 				voletService.setOuvertureVolet(0);
@@ -152,7 +165,7 @@ public class Engine implements Runnable {
 	
 	private void logState() {
 		System.out.println("[ Amp ][ Vol ]|[ Cfg ][ Lum ][ Pst ]");
-		System.out.println("|  ampouleService.getLumiere() +  |"
+		System.out.println("|"+  ampouleService.getLumiere() + " |"
 				+ "| " + voletService.getOuvertureVolet() + " |"
 				+ "|| " + configurationService.estVoletOuvertActive() + "|"
 				+ "| " + luminositeService.getLuminosite() + " |"

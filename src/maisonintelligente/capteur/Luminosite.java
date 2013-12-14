@@ -36,6 +36,7 @@ public class Luminosite implements ILuminosite, Runnable {
 		Webcam hercules = Webcam.getWebcams().get(1);
 	 	hercules.open();	
 	    BufferedImage img =hercules.getImage();
+	    int l;
 	    int w = img.getWidth();
 		int h = img.getHeight();
 		double L=0;
@@ -44,8 +45,8 @@ public class Luminosite implements ILuminosite, Runnable {
 			{    		
 				L = L+ getLuminositePixel(img, x, y);      		
 			}
-		luminosite= (int) (((L/(w*h))/255)*100);
-		return luminosite;
+		l= (int) (((L/(w*h))/255)*100);
+		return l;
 	}
 
 	@Override
@@ -68,12 +69,11 @@ public class Luminosite implements ILuminosite, Runnable {
 	public void run() {
 		
 		while(true){
-			
-			int newLuminosite = (int) Math.floor((Math.random() * 100));
+			int newLuminosite = getLuminosite();
 			
 			if(newLuminosite != this.luminosite){
 				this.luminosite = newLuminosite;
-				System.out.println("[LuminositeStub] La luminosite a changer : " + luminosite);
+				System.out.println("[Luminosite] La luminosite a changer : " + luminosite);
 			
 				for(int i=0;i<listeners.size();i++){
 					listeners.get(i).luminositeChanged();
@@ -81,7 +81,7 @@ public class Luminosite implements ILuminosite, Runnable {
 			}
 			
 			try {
-				Thread.sleep((long) Math.floor(Math.random() * 1000 * 30));
+				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
